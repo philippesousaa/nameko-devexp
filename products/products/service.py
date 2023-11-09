@@ -35,3 +35,11 @@ class ProductsService:
         for product in payload['order']['order_details']:
             self.storage.decrement_stock(
                 product['product_id'], product['quantity'])
+
+     @rpc
+    def delete(self, product_id):
+        product = self.storage.get(product_id)
+        if product:
+            self.storage.delete(product)
+        else:
+            raise NotFound('Product with id {} not found'.format(product_id))
