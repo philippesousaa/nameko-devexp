@@ -66,3 +66,11 @@ class OrdersService:
         order = self.db.query(Order).get(order_id)
         self.db.delete(order)
         self.db.commit()
+
+    @rpc
+    def list_orders(self, page=1, page_size=10):
+        offset = (page - 1) * page_size
+        orders = self.db.query(Order).offset(offset).limit(page_size).all()
+        orders_data = [OrderSchema().dump(order).data for order in orders]
+        return orders_data
+
